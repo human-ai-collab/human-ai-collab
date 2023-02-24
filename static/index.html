@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drawing Test</title>
+</head>
+<body>
+  <script src="p5.js"></script>
+  <script>
+    let x = 5;
+
+    function customFunction() {
+      console.log(x);
+      x ++;
+      rect(x, x, 20, 20);
+    }
+
+    function setup() {
+      createCanvas(800, 800);
+      background("#EEEEEE");
+    }
+  </script>
+  Here's some <br> body text.
+  <button onclick="customFunction()">Draw</button>
+  <button>Erase</button>
+  <button>Trap the AI</button>
+  <button>Liberate the AI</button>
+</body>
+</html>
