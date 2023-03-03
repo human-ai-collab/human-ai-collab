@@ -9,22 +9,93 @@
 <body>
   <script src="p5.js"></script>
   <script>
-    let x = 5;
+    // let x = 0;
 
-    function customFunction() {
-      console.log(x);
-      x ++;
-      rect(x, x, 20, 20);
-    }
+
+
+    // function customFunction() {
+    //   console.log(x);
+    //   x += 20;
+    //   rect(x, 10, 20, 20);
+    // }
+
+    // function setup() {
+    //   createCanvas(800, 800);
+    //   background("#EEEEEE");
+    // }
+
+    // function clearCanvas() {
+    //   createCanvas(800, 800);
+    //   background("#EEEEEE");
+    //   console.log("trying to erase");
+    // }
+
+    // function eraseLastDrawing() {
+
+    // }
+
+    let bgColor;
+
+    // mode 0 = drawing
+    // mode 1 = erasing
+    let mode = 0;
 
     function setup() {
-      createCanvas(800, 800);
-      background("#EEEEEE");
+      createCanvas(600, 600);
+      
+      colorMode(HSB);
+      
+      bgColor = 255;
+      background(200);
+      text('Hold the e key to erase', 20,20);
     }
+
+    function draw() {
+      
+      if(mode == 0){
+        drawMarker(0, 25);
+      } else if( mode == 1){
+        drawEraser(); 
+      }
+      
+      noStroke();
+      
+      if(keyIsPressed && key == 'e'){
+        mode = 1;
+      } else {
+        mode = 0; 
+      }
+      
+    }
+
+    function mousePressed(){
+      clearScreen(); 
+    }
+
+
+    function drawMarker(col, weight) {
+      strokeWeight(weight);
+      stroke(col, 70, 100);
+      line(mouseX, mouseY, pmouseX, pmouseY);
+    }
+
+    function drawEraser(){
+      strokeWeight(100);
+      stroke(200);
+      line(mouseX, mouseY, pmouseX, pmouseY);
+    }
+
+    function clearScreen() {
+      bgColor = color(random(360), random(100), random(100));
+      background(200);
+      text('Hold the e key to erase', 20,20);
+    }
+    
   </script>
   Here's some <br> body text.
   <button onclick="customFunction()">Draw</button>
-  <button>Erase</button>
+  <button onclick="">Erase</button>
+  <button onclick="clearCanvas()">Clear Canvas</button>
   <button>Trap the AI</button>
   <button>Liberate the AI</button>
 </body>
