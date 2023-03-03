@@ -3,7 +3,7 @@ import socketserver
 import os
 
 PORT = 8000
-DIRECTORY = 'static'
+DIRECTORY = '/static'
 
 # Call http://localhost:8000/ for the main page
 # Call http://localhost:8000/api/complete to complete a drawing
@@ -11,14 +11,18 @@ DIRECTORY = 'static'
 class MyHandler(http.server.SimpleHTTPRequestHandler):
   def translate_path(self, path: str) -> str:
     print(f"Path Before: {path}")
-    path = super().translate_path(path)
-    if os.path.isdir(path):
-      path = os.path.join(path, DIRECTORY, 'index.html')
-      print(f"Path After: {path}")
+    if not path.startswith("/api/"):
+      path = DIRECTORY + path
+      print(f"Static added: {path}")
+      path = super().translate_path(path)
+      print(f"Path Translated: {path}")
+      if os.path.isdir(path):
+        path = os.path.join(path, "index.html")
+    print(f"Path After: {path}")
     return path
     
   def do_GET(self):
-    if self.path.startswith("/api"):
+    if self.path.startswith("/api/"):
       if self.path.startswith("/api/complete"):
         print(f"do_GET path: {self.path}")
         self.send_response(200)
@@ -37,7 +41,7 @@ try:
   with socketserver.TCPServer(("", PORT), Handler) as httpd:
     print(f"Serving at port {PORT}")
     httpd.daemon_threads = True
-    httpd.allow_reuse_address = True
+    # httpd.allow_reuse_address = True
     Handler.directory = DIRECTORY
     httpd.serve_forever()
 except KeyboardInterrupt:
