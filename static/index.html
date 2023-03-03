@@ -12,7 +12,7 @@
     let x = 5;
 
     function customFunction() {
-      console.log(x);
+      // console.log(x);
       x ++;
       rect(x, x, 20, 20);
     }
@@ -21,11 +21,38 @@
       createCanvas(800, 800);
       background("#EEEEEE");
     }
+
+    function sendImage() {
+      console
+    }
+    function uploadFile() {
+      var blobFile = $('#image').files[0];
+      var formData = new FormData();
+      formData.append("fileToUpload", blobFile);
+
+      $.ajax({
+        url: "upload.php",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            // .. do something
+        },
+        error: function(jqXHR, textStatus, errorMessage) {
+            console.log(errorMessage); // Optional
+        }
+      });
+    }
   </script>
   Here's some <br> body text.
   <button onclick="customFunction()">Draw</button>
   <button>Erase</button>
   <button>Trap the AI</button>
   <button>Liberate the AI</button>
+  <form action="/api/complete" method="get">
+    <input type="file" name="img">
+    <input type="submit">
+  </form>
 </body>
 </html>
