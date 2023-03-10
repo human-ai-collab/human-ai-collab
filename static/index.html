@@ -38,8 +38,8 @@
 
     // mode 0 = drawing
     // mode 1 = erasing
-    // mode 2  = static
-    let mode = 0;
+    // mode 2 = static
+    let mode = 2;
 
     function setup() {
       createCanvas(600, 600);
@@ -61,9 +61,9 @@
       
       noStroke();
       
-      if(mousePresssed && keyIsPressed && key == 'e'){
+      if(mousePressed && keyIsPressed && key == 'e'){
         mode = 1;
-      } else if (mousePressed && keyIsPressed && key == 'd'){
+      } else if(mousePressed && keyIsPressed && key == 'd'){
         mode = 0; 
       }
       else{
@@ -94,14 +94,14 @@
       background(200);
       text('Hold the e key to erase', 20,20);
     }
-    
-    function drawState(){
-       state = 0;
+
+    function toggleDraw(){
+      mode = 0;
     }
     
   </script>
   Here's some <br> body text.
-  <button onclick="drawState()">Draw</button>
+  <button onclick="toggleDraw()">Draw</button>
   <button onclick="">Erase</button>
   <button onclick="clearCanvas()">Clear Canvas</button>
   <button>Trap the AI</button>
