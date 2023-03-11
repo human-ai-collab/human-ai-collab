@@ -34,4 +34,4 @@ prompt = "A fantasy landscape, trending on artstation"
 
 images = pipe(prompt=prompt, image=init_image, strength=0.75, guidance_scale=7.5).images
 
-images[0].save("fantasy_landscape.png")
+images[0].save("output/fantasy_landscape.png")

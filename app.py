@@ -5,6 +5,19 @@
 
 from flask import Flask
 from flask import send_from_directory, request
+import base64
+from io import BytesIO
+from PIL import Image, ImageShow
+
+def image_to_dataURI(img):
+  buffered = BytesIO()
+  ext = "PNG"
+  img.save(buffered, format=ext)
+  base64_utf8_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+  return f"data:image/{ext};base64,{base64_utf8_str}"
+
+placeholder_img = Image.open("static/images/cat-better.png")
+placeholder_uri = image_to_dataURI(placeholder_img)
 
 app = Flask(__name__)
 
@@ -15,7 +28,10 @@ def hello_world(path):
 
 @app.route("/api/complete", methods=['POST'])
 def complete():
-    return {"image": request.json['image']}
+  body = request.json
+  input = body['image']
+  output = placeholder_uri
+  return {"image": output}
 
 if __name__ == "__main__":
   from waitress import serve
