@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drawing Test</title>
+</head>
+<body>
+  <script src="p5.js"></script>
+  <script>
+    // Create Canvases
+    const IMAGE_SIZE = 8
+    const CANVAS_ID = "main-canvas";
+    let canvas;
+    let completeCanvas = document.createElement("canvas");
+    completeCanvas.width = IMAGE_SIZE;
+    completeCanvas.height = IMAGE_SIZE;
+
+    function customFunction() {
+      // console.log(x);
+      x ++;
+      rect(x, x, 20, 20);
+    }
+
+    function setup() {
+      const renderer = createCanvas(IMAGE_SIZE, IMAGE_SIZE);
+      canvas = renderer.canvas;
+      renderer.id(CANVAS_ID);
+      background("#EEEEEE");
+    }
+    function complete() {
+      sendImage()
+      .then(resp => resp.json())
+      .then(data => console.log(data))
+    }
+    function trace() {}
+    function sendImage() {
+      return fetch("/api/complete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "image": canvasToBase64()
+        })
+      });
+    }
+    function canvasToBase64 () {
+      // var c = $('#drawingCanvas').find('canvas'); // using jQuery
+      let c = document.getElementById(CANVAS_ID);
+      let imageData = c.toDataURL('image/png'); // produces a base64 image string
+      return imageData;
+    }
+  </script>
+  <button onclick="complete()">Send to Server</button>
+</body>
+</html>
