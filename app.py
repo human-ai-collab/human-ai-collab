@@ -1,5 +1,6 @@
-# Call http://localhost:8000/ for the main page
-# Call http://localhost:8000/api/complete to complete a drawing
+# Visit http://localhost:8000/index.html for the main page
+# Visit http://localhost:8000/send-image.html for the latest api for sending and tracing images.
+# Send request to http://localhost:8000/api/complete to complete a drawing
 
 # Good edit prompt: "beautiful, stunning, award-winning, fantastic, realistic, professional"
 
@@ -8,6 +9,8 @@ from flask import send_from_directory, request
 import base64
 from io import BytesIO
 from PIL import Image, ImageShow
+
+PORT = 8000
 
 def image_to_dataURI(img):
   buffered = BytesIO()
@@ -35,4 +38,5 @@ def complete():
 
 if __name__ == "__main__":
   from waitress import serve
-  serve(app, host="0.0.0.0", port=8000)
+  print(f"serving to http://localhost:{PORT}")
+  serve(app, host="0.0.0.0", port=PORT)
