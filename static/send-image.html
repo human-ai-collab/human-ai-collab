@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drawing Test</title>
+</head>
+<body>
+  <script src="p5.js"></script>
+  <script>
+    // Define Canvas variables
+    const IMAGE_SIZE = 512;
+    let drawingCanvas;
+    let completeCanvas;
+    let differenceCanvas;
+    let drawingCTX, completeCTX, differenceCTX;
+
+    function setup() {
+      // Initialize Canvases
+      const parentEl = document.querySelector("main");
+
+      // Drawing Canvas
+      pixelDensity(1)
+      const p5Renderer = createCanvas(IMAGE_SIZE, IMAGE_SIZE);
+      drawingCanvas = p5Renderer.canvas;
+      drawingCTX = drawingCanvas.getContext('2d', { willReadFrequently: true });
+
+      // Complete Canvas
+      completeCanvas = document.createElement("canvas");
+      parentEl.appendChild(completeCanvas);
+      completeCanvas.width = IMAGE_SIZE;
+      completeCanvas.height = IMAGE_SIZE;
+      completeCTX = completeCanvas.getContext('2d', { willReadFrequently: true });
+      completeCTX.fillStyle = "#FFF";
+      completeCTX.fillRect(0, 0, IMAGE_SIZE, IMAGE_SIZE);
+
+      // Difference Canvas
+      differenceCanvas = document.createElement("canvas");
+      parentEl.appendChild(differenceCanvas);
+      differenceCanvas.width = IMAGE_SIZE;
+      differenceCanvas.height = IMAGE_SIZE;
+      differenceCTX = differenceCanvas.getContext('2d', { willReadFrequently: true });
+
+      background("#888");
+      let imageObj = document.createElement("img")
+      imageObj.onload = function() {
+        drawingCTX.drawImage(this, 0, 0);
+      };
+      imageObj.src = "images/cat-unfinished.png"
+
+      setInterval(_ => computeDifference(), 100);
+    }
+
+    let pos;
+    let newPos;
+    let bestNewPos;
+    let startingRot = 0;
+    function draw() {
+      if (!pos) {
+        pos = createVector(0,0);
+        newPos = createVector(0,0);
+        bestNewPos = createVector(0,0);
+        resetPos();
+      }
+      if (Math.random() < 0.03) {
+        for (let i = 0; i < 10000; i ++) {
+          resetPos();
+          if (valueAt(pos, differenceCTX) > 0) {
+            break;
+          }
+        }
+      } else {
+        for (let j = 0; j < 2; j ++) {
+          bestNewPos.set(pos);
+          let bestValue = 0;
+          for (let i = 0; i < 40; i ++) {
+            const normalStep = Math.random()*2+2;
+            const randomLeap = Math.random() < 0.1 ? Math.random() * 20 : 0;
+            newPos.set(normalStep + randomLeap, 0);
+            newPos.rotate(2 * PI * (i / 10 + startingRot));
+            newPos.add(pos);
+            const newValue = valueAt(newPos, differenceCTX)
+            // console.log(newValue)
+            if (inBounds(newPos) && newValue > bestValue) {
+              bestNewPos.set(newPos);
+              bestValue = newValue;
+            }
+          }
+          strokeWeight(2 + 2 * Math.random());
+          stroke(valueAt(bestNewPos, completeCTX));
+          line(pos.x, pos.y, bestNewPos.x, bestNewPos.y);
+          pos.set(bestNewPos);
+        }
+      }
+    }
+
+    function resetPos() {
+      pos.x = Math.floor(Math.random() * IMAGE_SIZE);
+      pos.y = Math.floor(Math.random() * IMAGE_SIZE);
+      startingRot = Math.random() * 2 * PI;
+    }
+
+    function valueAt(pos, ctx) {
+      return ctx.getImageData(Math.floor(pos.x), Math.floor(pos.y), 1, 1).data[0]
+    }
+
+    function inBounds(pos) {
+      return pos.x >= 0 && pos.y >= 0 && pos.x < IMAGE_SIZE && pos.y < IMAGE_SIZE;
+    }
+
+    function complete() {
+      sendImage()
+      .then(resp => resp.json())
+      .then(data => loadDataURL(data.image, completeCanvas))
+      .then(_ => computeDifference())
+    }
+    function computeDifference() {
+      setTimeout(_ => {
+        const drawingData = drawingCTX.getImageData(0, 0, IMAGE_SIZE, IMAGE_SIZE);
+        const completeData = completeCTX.getImageData(0, 0, IMAGE_SIZE, IMAGE_SIZE);
+        const differenceData = differenceCTX.getImageData(0, 0, IMAGE_SIZE, IMAGE_SIZE);
+        const drawingArr = drawingData.data;
+        const completeArr = completeData.data;
+        const differenceArr = differenceData.data;
+  
+        // console.log(differenceCTX.getImageData(0, 0, IMAGE_SIZE, IMAGE_SIZE));
+        for (let i = 0; i < differenceArr.length; i += 4) {
+          // const px = Math.floor(i / 4);
+          // const x = (px % IMAGE_SIZE) * 2;
+          // const y = Math.floor(px / IMAGE_SIZE) * 4;
+          // const drawingIndex = 4 * (x + IMAGE_SIZE * y);
+          const val = Math.max(0, drawingArr[i] - completeArr[i]);
+          // const val = Math.max(0, drawingArr[drawingIndex]);
+          differenceArr[i] = val;
+          differenceArr[i+1] = val;
+          differenceArr[i+2] = val;
+          differenceArr[i+3] = 255;
+        }
+        differenceCTX.putImageData(differenceData, 0, 0);
+        differenceCTX
+      }, 100);
+    }
+    function loadDataURL(dataURL, canvas) {
+      const myPromise = new Promise((resolve, reject) => {
+        let context = canvas.getContext('2d');
+        // load image from data url
+        let imageObj = document.createElement("img")
+        imageObj.onload = function() {
+          context.drawImage(this, 0, 0);
+          setTimeout(_ => resolve(), 1000)
+          // resolve();
+        };
+        imageObj.src = dataURL;
+      });
+    }
+    function sendImage() {
+      return fetch("/api/complete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "image": canvasToBase64(drawingCanvas)
+        })
+      });
+    }
+    function canvasToBase64(canvas) {
+      let imageData = canvas.toDataURL('image/png'); // produces a base64 image string
+      return imageData;
+    }
+  </script>
+  <button onclick="complete()">Complete</button>
+</body>
+</html>

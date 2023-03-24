@@ -1,44 +1,38 @@
-import http.server
-import socketserver
-import os
-
-PORT = 8000
-DIRECTORY = 'static'
-
 # Call http://localhost:8000/ for the main page
 # Call http://localhost:8000/api/complete to complete a drawing
 
-class MyHandler(http.server.SimpleHTTPRequestHandler):
-  def translate_path(self, path: str) -> str:
-    print(f"Path Before: {path}")
-    path = super().translate_path(path)
-    if os.path.isdir(path):
-      path = os.path.join(path, DIRECTORY, 'index.html')
-      print(f"Path After: {path}")
-    return path
-    
-  def do_GET(self):
-    if self.path.startswith("/api"):
-      if self.path.startswith("/api/complete"):
-        print(f"do_GET path: {self.path}")
-        self.send_response(200)
-        self.send_header("Content-type", "application/json")
-        self.end_headers()
-        # with open(filename, '')
-        self.wfile.write(b'{"completed": "dajodajwiodjwai"}')
-      else:
-        super().do_GET()
-    else:
-      super().do_GET()
+# Good edit prompt: "beautiful, stunning, award-winning, fantastic, realistic, professional"
 
-Handler = MyHandler
+from flask import Flask
+from flask import send_from_directory, request
+import base64
+from io import BytesIO
+from PIL import Image, ImageShow
 
-try:
-  with socketserver.TCPServer(("", PORT), Handler) as httpd:
-    print(f"Serving at port {PORT}")
-    httpd.daemon_threads = True
-    httpd.allow_reuse_address = True
-    Handler.directory = DIRECTORY
-    httpd.serve_forever()
-except KeyboardInterrupt:
-  httpd.server_close()
+def image_to_dataURI(img):
+  buffered = BytesIO()
+  ext = "PNG"
+  img.save(buffered, format=ext)
+  base64_utf8_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+  return f"data:image/{ext};base64,{base64_utf8_str}"
+
+placeholder_img = Image.open("static/images/cat-better.png")
+placeholder_uri = image_to_dataURI(placeholder_img)
+
+app = Flask(__name__)
+
+@app.route("/<path:path>")
+def hello_world(path):
+    dir = path or "index.html"
+    return send_from_directory("static", path)
+
+@app.route("/api/complete", methods=['POST'])
+def complete():
+  body = request.json
+  input = body['image']
+  output = placeholder_uri
+  return {"image": output}
+
+if __name__ == "__main__":
+  from waitress import serve
+  serve(app, host="0.0.0.0", port=8000)
