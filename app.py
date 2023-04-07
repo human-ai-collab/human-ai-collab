@@ -1,18 +1,33 @@
+# MAIN BACKEND FILE
+
+
 # Visit http://localhost:8000/index.html for the main page
 # Visit http://localhost:8000/send-image.html for the latest api for sending and tracing images.
 # Send request to http://localhost:8000/api/complete to complete a drawing
 
 # Good edit prompt: "beautiful, stunning, award-winning, fantastic, realistic, professional"
 
+
+# Import requried libraries
 from flask import Flask
 from flask import send_from_directory, request
 import base64
 from io import BytesIO
 from PIL import Image, ImageShow
-# from ai import AI_complete
+from waitress import serve
 
+# Choose your port here
 PORT = 8000
-USE_PLACEHOLDER = True
+# Set to true if you want to enable AI features (faster)
+ENABLE_AI = True
+# Only loads the AI library if it's allowed.
+if ENABLE_AI:
+  from ai import AI_complete
+
+
+# PIL is an image format that our AI algorithm.
+# dataURI is an image format that we send over http
+# These two functions convert between the two.
 
 # Converts PIL Image object to a dataURI PNG string.
 def PIL_to_dataURI(img):
@@ -30,22 +45,28 @@ def dataURI_to_PIL(dataURI):
   dataPart = dataURI.split(",")[1]
   return Image.open(BytesIO(base64.decodebytes(bytes(dataPart, "utf-8"))))
 
+# Locate the placeholder image that we use when AI is disabled.
 placeholder_img = Image.open("static/images/cat-finished.png")
 placeholder_uri = PIL_to_dataURI(placeholder_img)
 
+# Initialize a new python flask server.
 app = Flask(__name__)
 
+# Serve the static site
 @app.route("/<path:path>")
-def hello_world(path):
+def static_site(path):
   dir = path or "index.html"
+  if path == "":
+    path = "index.html"
   return send_from_directory("static", path)
 
+# Send it an image and it will complete it with AI and send it back.
 @app.route("/api/complete", methods=['POST'])
-def complete():
+def ai_complete():
   body = request.json
   input_URI = body['image'] # dataURI for input image
   input_PIL = dataURI_to_PIL(input_URI)
-  if (USE_PLACEHOLDER):
+  if (not ENABLE_AI):
     output = placeholder_uri
   else:
     output_PIL = AI_complete(input_PIL)
@@ -55,7 +76,7 @@ def complete():
   return {"image": output}
 
 if __name__ == "__main__":
-  from waitress import serve
   print(f"serving to http://localhost:{PORT}")
   print("READY!")
+  # Start the server.
   serve(app, host="0.0.0.0", port=PORT)
