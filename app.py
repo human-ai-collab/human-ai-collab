@@ -30,7 +30,7 @@ def dataURI_to_PIL(dataURI):
   dataPart = dataURI.split(",")[1]
   return Image.open(BytesIO(base64.decodebytes(bytes(dataPart, "utf-8"))))
 
-placeholder_img = Image.open("static/images/cat-unfinished.png")
+placeholder_img = Image.open("static/images/cat-finished.png")
 placeholder_uri = PIL_to_dataURI(placeholder_img)
 
 app = Flask(__name__)

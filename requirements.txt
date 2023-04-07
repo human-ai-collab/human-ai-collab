@@ -2,3 +2,4 @@ torch
 pillow
 flask
 diffusers
+waitress
