@@ -1,8 +1,16 @@
 body {
     background-color: lightblue;
-  }
-  
-  h1 {
     color: navy;
-    margin-left: 20px;
-  }
+    text-align: center;
+    vertical-align: middle;
+}
+
+.toggleDraw{
+    background: #ce0000;
+    border: 1px solid #000000;
+    color: white;
+    padding: 4px 10px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+}
