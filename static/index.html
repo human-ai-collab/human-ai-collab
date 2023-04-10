@@ -71,6 +71,14 @@
       line(mouseX, mouseY, pmouseX, pmouseY);
     }
 
+    function mousePressed(){
+      if(mode == 2){
+        strokeWeight(weight);
+        stroke(colorPicker.color());
+        line(mouseX, mouseY, pmouseX, pmouseY);
+      }
+    }
+
     function drawEraser(weight){
       strokeWeight(weight);
       stroke(200);
