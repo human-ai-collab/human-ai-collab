@@ -19,7 +19,7 @@ from waitress import serve
 # Choose your port here
 PORT = 8000
 # Set to true if you want to enable AI features (faster)
-ENABLE_AI = True
+ENABLE_AI = False
 # Only loads the AI library if it's allowed.
 if ENABLE_AI:
   from ai import AI_complete
