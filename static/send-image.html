@@ -8,51 +8,52 @@
 </head>
 <body>
   <script src="p5.js"></script>
-  <script>
-    // Create Canvases
-    const IMAGE_SIZE = 8
-    const CANVAS_ID = "main-canvas";
-    let canvas;
-    let completeCanvas = document.createElement("canvas");
-    completeCanvas.width = IMAGE_SIZE;
-    completeCanvas.height = IMAGE_SIZE;
+  <button id="load-example">Load Example</button>
+  <button id="complete">Complete</button>
 
-    function customFunction() {
-      // console.log(x);
-      x ++;
-      rect(x, x, 20, 20);
+  <script type="module">
+    import complete from '/js/completion.js';
+    import Tracer from '/js/Tracer.js';
+    let tracer, drawingCanvas;
+    const IMAGE_SIZE = 512;
+
+    let placeholderDrawing;
+    function preload() {
     }
 
-    function setup() {
-      const renderer = createCanvas(IMAGE_SIZE, IMAGE_SIZE);
-      canvas = renderer.canvas;
-      renderer.id(CANVAS_ID);
-      background("#EEEEEE");
+    window.setup = function() {
+      const p5Renderer = createCanvas(IMAGE_SIZE, IMAGE_SIZE);
+      background(200)
+      frameRate(60);
+      drawingCanvas = p5Renderer.canvas;
+      tracer = new Tracer(drawingCanvas, 2000);
     }
-    function complete() {
-      sendImage()
-      .then(resp => resp.json())
-      .then(data => console.log(data))
+
+    window.draw = function draw() {
+      tracer.draw();
     }
-    function trace() {}
-    function sendImage() {
-      return fetch("/api/complete", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          "image": canvasToBase64()
-        })
+
+    document.querySelector("#load-example").onclick = function() {
+      let placeholder = new Image();
+      placeholder.onload = function() {
+        const ctx = drawingCanvas.getContext('2d');
+        ctx.drawImage(placeholder, 0, 0);
+      }
+      placeholder.src = 'images/cat-unfinished.png';
+    }
+
+    function recursiveComplete() {
+      complete(drawingCanvas, Tracer.completeCanvas).then(() => {
+        tracer.startTracing()
+        // Trace for a minute, then get another completion.
+        setTimeout(() => {
+          tracer.stopTracing();
+          recursiveComplete();
+        }, 60 * 1000);
       });
     }
-    function canvasToBase64 () {
-      // var c = $('#drawingCanvas').find('canvas'); // using jQuery
-      let c = document.getElementById(CANVAS_ID);
-      let imageData = c.toDataURL('image/png'); // produces a base64 image string
-      return imageData;
-    }
+
+    document.querySelector("#complete").onclick = recursiveComplete;
   </script>
-  <button onclick="complete()">Send to Server</button>
 </body>
 </html>
