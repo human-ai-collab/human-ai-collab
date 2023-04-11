@@ -8,53 +8,29 @@ How the REST API works: Send request to http://localhost:8000/api/complete
   with {"image": "data:PNG;base64,iVBORw0KGgo..."} to request a drawing completion
 """
 
-
-
 # Import requried libraries
 from flask import Flask
 from flask import send_from_directory, request
-import base64
-from io import BytesIO
-from PIL import Image, ImageShow
+from PIL import Image
 from waitress import serve
 import sys
+from util import pillow_to_dataURI, dataURI_to_pillow
 
 # Choose your port here
 PORT = 8000
+
 # Run "python3 app.py" if you want to enable AI features (slower)
 # Run "python3 app.py no-ai" if you want to enable AI features (faster)
-ENABLE_AI = False if "no-ai" in sys.argv else True
-print(ENABLE_AI)
+enableAI = False if "no-ai" in sys.argv else True
 # PLACEHOLDER_FILE = "static/images/cat-better.png"
-PLACEHOLDER_FILE = "static/images/danny.png"
 
 # Only loads the AI library if it's allowed.
-if ENABLE_AI:
+if enableAI:
   from ai import AI_complete
-
-
-# PIL is an image format that our AI algorithm.
-# dataURI is an image format that we send over http
-# These two functions convert between the two.
-
-# Converts PIL Image object to a dataURI PNG string.
-def PIL_to_dataURI(img):
-  buffered = BytesIO()
-  ext = "PNG"
-  img.save(buffered, format=ext)
-  base64_utf8_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-  return f"data:image/{ext};base64,{base64_utf8_str}"
-
-# Converts dataURI PNG string into a PIL Image object.
-def dataURI_to_PIL(dataURI):
-  assert len(dataURI.split(",")) == 2
-  # image dataURI's follow the format data:image/png;base64,{A BUNCH OF CHARACTERS HERE}
-  # We get the data portion of this string.
-  dataPart = dataURI.split(",")[1]
-  return Image.open(BytesIO(base64.decodebytes(bytes(dataPart, "utf-8"))))
-
-# Locate the placeholder image that we use when AI is disabled.
-placeholder_uri = PIL_to_dataURI(Image.open(PLACEHOLDER_FILE))
+else:
+  PLACEHOLDER_FILE = "static/images/cat-better.png"
+  # Locate the placeholder image that we use when AI is disabled.
+  placeholder_uri = pillow_to_dataURI(Image.open(PLACEHOLDER_FILE))
 
 # Initialize a new python flask server.
 app = Flask(__name__)
@@ -78,17 +54,17 @@ def ai_complete():
   # dataURI for input image
   input_URI = body['image']
   # convert to Pillow image object
-  input_PIL = dataURI_to_PIL(input_URI)
+  input_PIL = dataURI_to_pillow(input_URI)
 
   # Check if AI is enabled (can be disabled for faster testing).
-  if (not ENABLE_AI):
+  if (not enableAI):
     # Send a placeholder to the user if AI is disabled.
     output = placeholder_uri
   else:
     # Use ai.py to compute an image if AI is enabled.
     output_PIL = AI_complete(input_PIL)
-    output_URI = PIL_to_dataURI(output_PIL)
-    output = PIL_to_dataURI(dataURI_to_PIL(output_URI))
+    output_URI = pillow_to_dataURI(output_PIL)
+    output = pillow_to_dataURI(dataURI_to_pillow(output_URI))
   return {"image": output}
 
 # This is basically equivalent to a "main" function in C++ or java.
