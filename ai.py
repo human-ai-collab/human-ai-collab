@@ -1,15 +1,19 @@
-# to run, use "python3 ai.py"
-# vvv PERFECT MODEL FOR OUR USE CASE!
-# https://huggingface.co/spaces/huggingface-projects/diffuse-the-rest
+"""
+This file contains just the AI script 
+Here is another model we could consider using use:
+  https://huggingface.co/spaces/huggingface-projects/diffuse-the-rest
+Good edit prompt: "beautiful, stunning, award-winning, fantastic, realistic, professional"
+"""
 
+# Import all libraries.
 import torch
-import requests
-from PIL import Image
-from io import BytesIO
 import os
 import time
+import json
+import importlib
+import prompt
 
-# Might have to use this command:
+# If this line doesn't work, you might have to use this command:
 # python3 -m pip install --upgrade diffusers accelerate transformers
 from diffusers import StableDiffusionImg2ImgPipeline
 
@@ -24,34 +28,33 @@ else:
 pipe.safety_checker = lambda images, clip_input: (images, False)
 
 def AI_complete(img):
-  """ Funtion that completes a drawing.
+  """ Funtion that completes a drawing using HuggingFace StableDiffusion.
   :param object img input image
   :return completed image """
-  # url = "https://raw.githubusercontent.com/CompVis/stable-diffusion/main/assets/stable-samples/img2img/sketch-mountains-input.jpg"
-  # response = requests.get(url)
-  # img = Image.open(BytesIO(response.content)).convert("RGB")
 
+  # Save the origional image size so that we can downscale it, then scale it back up to the origional.
   original_height, original_width = img.size
-  print(f"Original size: {(original_height, original_height)}")
+  # The size that we downscale the image to.
   downscale_size = 512
+  # Remove the image "alpha" channel and size it down.
   input_img = img.convert("RGB").resize((downscale_size, downscale_size))
-  print(f"Processing size: {input_img.size}")
   print("Completing image...")
-  images = pipe(
-    image=input_img,
-    prompt="Intricate realistic ink drawing, trending on ArtStation, full composition, photocopy",
-    strength=0.5, # default 0.75
-    guidance_scale=7.5, # default 7.5
-    num_inference_steps=3, # default 50
-    negative_prompt="beginner, colorful", # default nothing
-    num_images_per_prompt=1 # default 1
-  ).images
 
-  # if it doesn’t exist we create one
+  # Get an up-to-date prompt, in case the file changed.
+  importlib.reload(prompt)
+  # Add the input image as one of the arguments.
+  prompt.arguments["image"] = input_img
+
+  # Run the model on the downscaled image.
+  images = pipe(**prompt.arguments).images
+
+  # Dump the output image into "output_dump" folder for testing.
+  # If it doesn’t exist we create one.
   if not os.path.exists('output_dump'):
     os.makedirs('output_dump')
+  # Save the image to file with a timestamp.
   images[0].save(f"output_dump/output-{int(time.time())}.png")
 
+  # Scale the image back to it's origional size, so that it fits perfectly onto the p5 canvas.
   output = images[0].resize((original_height, original_width))
-  print(f"Output size: {output.size}")
   return output
