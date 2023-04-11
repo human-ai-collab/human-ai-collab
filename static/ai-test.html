@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Drawing Test</title>
+  <title>AI Completion</title>
 </head>
 <body>
   <script src="p5.js"></script>
+  <p>This page is being used to test the AI functionality. Eventually, we will have to integrate this code into the main page.</p>
   <button id="load-example">Load Example</button>
   <button id="complete">Complete</button>
 
@@ -42,11 +43,18 @@
       placeholder.src = 'images/cat-unfinished.png';
     }
 
-    document.querySelector("#complete").onclick = function() {
+    function recursiveComplete() {
       complete(drawingCanvas, Tracer.completeCanvas).then(() => {
         tracer.startTracing()
+        // Trace for a minute, then get another completion.
+        setTimeout(() => {
+          tracer.stopTracing();
+          recursiveComplete();
+        }, 60 * 1000);
       });
-    };
+    }
+
+    document.querySelector("#complete").onclick = recursiveComplete;
   </script>
 </body>
 </html>

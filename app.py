@@ -17,11 +17,14 @@ import base64
 from io import BytesIO
 from PIL import Image, ImageShow
 from waitress import serve
+import sys
 
 # Choose your port here
 PORT = 8000
-# Set to true if you want to enable AI features (faster)
-ENABLE_AI = True
+# Run "python3 app.py" if you want to enable AI features (slower)
+# Run "python3 app.py no-ai" if you want to enable AI features (faster)
+ENABLE_AI = False if "no-ai" in sys.argv else True
+print(ENABLE_AI)
 # PLACEHOLDER_FILE = "static/images/cat-better.png"
 PLACEHOLDER_FILE = "static/images/danny.png"
 
