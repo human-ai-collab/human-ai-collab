@@ -1,3 +1,3 @@
 __pycache__
-output-dump/*
+/output-dump/*
 .DS_Store
