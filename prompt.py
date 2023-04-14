@@ -7,8 +7,8 @@ Feel free to try different things with this and keep track of your findings.
 arguments = {
   # Change this to change the text prompt for how to edit the image.
   # "prompt": "Realistic graphite sketch by Rembrandt, museum, full composition, photocopy",
-  # "prompt": "Realistic ink drawing, trending on ArtStation, full composition, photocopy",
-  "prompt": "Realistic graphic sketch, trending on ArtStation, full composition, photocopy",
+  "prompt": "Realistic ink drawing, trending on ArtStation, full composition, photocopy",
+  # "prompt": "Realistic graphic sketch, trending on ArtStation, full composition, photocopy",
   # How strongly the image is affected.
   # Default: 0.75
   "strength": 0.46,
@@ -20,7 +20,7 @@ arguments = {
   # How many steps the AI takse to make the image looks better. More is faster but a lot slower.
   # I'd keep this low while testing.
   # Default: 50
-  "num_inference_steps": 20,
+  "num_inference_steps": 10,
 
   # Tells AI what NOT to do.
   # Default: ""
