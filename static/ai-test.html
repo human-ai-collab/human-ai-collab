@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Completion</title>
+</head>
+<body>
+  <script src="p5.js"></script>
+  <p>This page is being used to test the AI functionality. Eventually, we will have to integrate this code into the main page.</p>
+  <button id="load-example">Load Example</button>
+  <button id="complete">Complete</button>
+
+  <script type="module">
+    import complete from '/js/completion.js';
+    import Tracer from '/js/Tracer.js';
+    let tracer, drawingCanvas;
+    const IMAGE_SIZE = 512;
+
+    let placeholderDrawing;
+    function preload() {
+    }
+
+    window.setup = function() {
+      const p5Renderer = createCanvas(IMAGE_SIZE, IMAGE_SIZE);
+      background(200)
+      frameRate(60);
+      drawingCanvas = p5Renderer.canvas;
+      tracer = new Tracer(drawingCanvas, 2000);
+    }
+
+    window.draw = function draw() {
+      tracer.draw();
+    }
+
+    document.querySelector("#load-example").onclick = function() {
+      let placeholder = new Image();
+      placeholder.onload = function() {
+        const ctx = drawingCanvas.getContext('2d');
+        ctx.drawImage(placeholder, 0, 0);
+      }
+      placeholder.src = 'images/cat-unfinished.png';
+    }
+
+    function recursiveComplete() {
+      complete(drawingCanvas, Tracer.completeCanvas).then(() => {
+        tracer.startTracing()
+        // Trace for a minute, then get another completion.
+        setTimeout(() => {
+          tracer.stopTracing();
+          recursiveComplete();
+        }, 60 * 1000);
+      });
+    }
+
+    document.querySelector("#complete").onclick = recursiveComplete;
+  </script>
+</body>
+</html>
