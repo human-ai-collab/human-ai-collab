@@ -43,14 +43,7 @@
     }
 
     function draw() {
-      weight = slider.value();
-
-      if(mode == 0){
-        drawMarker(0, weight);
-      } else if( mode == 1){
-        drawEraser(weight); 
-      }
-      
+      weight = slider.value();      
       noStroke();
       
       if(keyIsPressed && key == 'e'){
@@ -72,9 +65,14 @@
     }
 
     function mouseDragged(){
-      if(mode == 2){
+      if(mode == 0){
         strokeWeight(weight);
         stroke(colorPicker.color());
+        line(mouseX, mouseY, pmouseX, pmouseY);
+      }
+      else if( mode == 1){
+        strokeWeight(weight);
+        stroke(200);
         line(mouseX, mouseY, pmouseX, pmouseY);
       }
     }
