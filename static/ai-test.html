@@ -13,15 +13,18 @@
   <button id="complete">Complete</button>
 
   <script type="module">
+    // Import the required tracer and image-completion functionality.
     import complete from '/js/completion.js';
     import Tracer from '/js/Tracer.js';
+    // Initialize variables
     let tracer, drawingCanvas;
+    // Sets the size of the canvas.
     const IMAGE_SIZE = 512;
 
+    // Placeholder image that you can load onto the canvas to test stuff.
     let placeholderDrawing;
-    function preload() {
-    }
 
+    // this is the "module" verson of the p5 setup function. Works the same way as setup(){}
     window.setup = function() {
       const p5Renderer = createCanvas(IMAGE_SIZE, IMAGE_SIZE);
       background(200)
@@ -30,10 +33,13 @@
       tracer = new Tracer(drawingCanvas, 2000);
     }
 
+    // this is the "module" verson of the p5 draw function. Works the same way as draw(){}
     window.draw = function draw() {
+      // Move the tracer a little bit.
       tracer.draw();
     }
 
+    // Code to load an example image when button is pressed.
     document.querySelector("#load-example").onclick = function() {
       let placeholder = new Image();
       placeholder.onload = function() {
@@ -43,6 +49,7 @@
       placeholder.src = 'images/cat-unfinished.png';
     }
 
+    // Get an image completion from the backend. Taces for a minute, then rinse and repeat.
     function recursiveComplete() {
       complete(drawingCanvas, Tracer.completeCanvas).then(() => {
         tracer.startTracing()
@@ -53,7 +60,6 @@
         }, 60 * 1000);
       });
     }
-
     document.querySelector("#complete").onclick = recursiveComplete;
   </script>
 </body>
