@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Completion</title>
+</head>
+<body>
+  <script src="p5.js"></script>
+  <p>This page is being used to test the AI functionality. Eventually, we will have to integrate this code into the main page.</p>
+  <button id="load-example">Load Example</button>
+  <button id="complete">Complete</button>
+
+  <script type="module">
+    // Import the required tracer and image-completion functionality.
+    import complete from '/js/completion.js';
+    import Tracer from '/js/Tracer.js';
+    // Initialize variables
+    let tracer, drawingCanvas;
+    let mode = 2;
+    let weight = 10;
+    // Sets the size of the canvas.
+    const IMAGE_SIZE = 512;
+
+    // Placeholder image that you can load onto the canvas to test stuff.
+    let placeholderDrawing;
+
+    // this is the "module" verson of the p5 setup function. Works the same way as setup(){}
+    window.setup = function() {
+      const p5Renderer = createCanvas(IMAGE_SIZE, IMAGE_SIZE);
+      background(200)
+      frameRate(60);
+      drawingCanvas = p5Renderer.canvas;
+      tracer = new Tracer(drawingCanvas, 2000);
+    }
+
+    // this is the "module" verson of the p5 draw function. Works the same way as draw(){}
+    window.draw = function draw() {
+      // Move the tracer a little bit.
+      tracer.draw();
+
+      if(keyIsPressed && key == 'e'){
+        mode = 1;
+      } else if(keyIsPressed && key == 'd'){
+        mode = 0; 
+      }
+      else if(keyIsPressed && key == 's'){
+        mode = 2;
+      }
+    }
+
+    // Code to load an example image when button is pressed.
+    document.querySelector("#load-example").onclick = function() {
+      let placeholder = new Image();
+      placeholder.onload = function() {
+        const ctx = drawingCanvas.getContext('2d');
+        ctx.drawImage(placeholder, 0, 0);
+      }
+      placeholder.src = 'images/cat-unfinished.png';
+    }
+
+    // Get an image completion from the backend. Taces for a minute, then rinse and repeat.
+    function recursiveComplete() {
+      complete(drawingCanvas, Tracer.completeCanvas).then(() => {
+        tracer.startTracing()
+        // Trace for a minute, then get another completion.
+        setTimeout(() => {
+          tracer.stopTracing();
+          recursiveComplete();
+        }, 60 * 1000);
+      });
+    }
+    document.querySelector("#complete").onclick = recursiveComplete;
+
+    window.mouseDragged = function() {
+      if(mode == 0){
+        strokeWeight(weight);
+        stroke(0);
+        line(mouseX, mouseY, pmouseX, pmouseY);
+      }
+      else if( mode == 1){
+        strokeWeight(weight);
+        stroke(200);
+        line(mouseX, mouseY, pmouseX, pmouseY);
+      }
+    }
+
+    window.clearScreen = function() {
+      bgColor = color(random(360), random(100), random(100));
+      background(200);
+      text('Hold the e key to erase', 20,20);
+    }
+
+    window.toggleDraw = function(){
+      mode = 0;
+    }
+
+    window.toggleErase = function(){
+      mode = 1;
+    }
+   
+  </script>
+  <input type=button class="toggleDraw" onclick="toggleDraw()" value="Draw" /input>
+  <!-- <button onclick="toggleErase()">Erase</button>
+  <button onclick="clearScreen()">Clear Canvas</button>
+  <button>Trap the AI</button>
+  <button>Liberate the AI</button>
+  <button onclick="suggest">Suggest</button> -->
+</body>
+</html>
