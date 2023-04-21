@@ -8,8 +8,7 @@ function loadExample() {
   placeholder.src = 'images/cat-unfinished.png';
 }
 
-let timer = null;
-
+let timer = null
 // Get an image completion from the backend. Taces for a minute, then rinse and repeat.
 function complete() {
   getCompletion(drawingCanvas, Tracer.completeCanvas).then(() => {
@@ -20,11 +19,6 @@ function complete() {
       complete();
     }, 30 * 1000);
   });
-}
-
-function stopAI(){
-  tracer.stopTracing()
-  timer.clearTimeout()
 }
 
 function mouseDragged() {

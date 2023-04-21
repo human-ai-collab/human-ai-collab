@@ -1,6 +1,6 @@
 // Initialize variables
 let tracer, drawingCanvas;
-let mode = 2;
+let mode = 0;
 let weight = 10;
 let slider;
 // Sets the size of the canvas.
