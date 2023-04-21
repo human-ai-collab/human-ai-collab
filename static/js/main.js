@@ -15,7 +15,7 @@ setup = function setup() {
   const p5Renderer = createCanvas(IMAGE_WIDTH, IMAGE_HEIGHT);
   frameRate(60);
   drawingCanvas = p5Renderer.canvas;
-  tracer = new Tracer(drawingCanvas, 20);
+  tracer = new Tracer(drawingCanvas, 2000);
   background(235)
   slider = createSlider(0, 255, 100);
   slider.position(10, 10);
