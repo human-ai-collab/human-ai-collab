@@ -8,7 +8,7 @@
   <title>AI Completion</title>
 </head>
 <body>
-  <p>This is the main page!</p>
+  <h1>Human AI Collaboration!</h1>
   <button type=button id="toggle-draw" onclick="toggleDraw()">Draw</button>
   <button id="load-example" onclick="loadExample()">Load Example</button>
   <button id="complete" onclick="complete()">Complete</button>
@@ -17,6 +17,9 @@
   <button id="constrain-ai" onclick="" disabled>Trap the AI</button>
   <button id="free-ai" onclick="" disabled>Liberate the AI</button>
   <label for="timelapse" onclick="toggleTimelapse()">Timelapse<input type="checkbox" id="timelapse"></label>
+  <div class="slidecontainer">
+    <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+  </div>
   
   <script src="js/p5.js"></script>
   <script src="/js/completion.js"></script>
