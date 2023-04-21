@@ -11,26 +11,18 @@ How the REST API works: Send request to http://localhost:8000/api/complete
 # Import requried libraries
 from flask import Flask
 from flask import send_from_directory, request
-from PIL import Image
 from waitress import serve
 import sys
 from util import pillow_to_dataURI, dataURI_to_pillow
+import ai
 
 # Choose your port here
 PORT = 8000
 
 # Run "python3 app.py" if you want to enable AI features (slower)
 # Run "python3 app.py no-ai" if you want to enable AI features (faster)
-enableAI = False if "no-ai" in sys.argv else True
-# PLACEHOLDER_FILE = "static/images/cat-better.png"
-
-# Only loads the AI library if it's allowed.
-if enableAI:
-  from ai import AI_complete
-else:
-  PLACEHOLDER_FILE = "static/images/cat-better.png"
-  # Locate the placeholder image that we use when AI is disabled.
-  placeholder_uri = pillow_to_dataURI(Image.open(PLACEHOLDER_FILE))
+enable_ai = False if "no-ai" in sys.argv else True
+ai.init(enable_ai, placeholder_image_path="static/images/cat-better.png")
 
 # Initialize a new python flask server.
 app = Flask(__name__)
@@ -56,15 +48,10 @@ def ai_complete():
   # convert to Pillow image object
   input_PIL = dataURI_to_pillow(input_URI)
 
-  # Check if AI is enabled (can be disabled for faster testing).
-  if (not enableAI):
-    # Send a placeholder to the user if AI is disabled.
-    output = placeholder_uri
-  else:
-    # Use ai.py to compute an image if AI is enabled.
-    output_PIL = AI_complete(input_PIL)
-    output_URI = pillow_to_dataURI(output_PIL)
-    output = pillow_to_dataURI(dataURI_to_pillow(output_URI))
+  # Use ai.py to compute an image if AI is enabled.
+  output_PIL = ai.complete_image(input_PIL)
+  output_URI = pillow_to_dataURI(output_PIL)
+  output = pillow_to_dataURI(dataURI_to_pillow(output_URI))
   return {"image": output}
 
 # This is basically equivalent to a "main" function in C++ or java.
@@ -72,4 +59,4 @@ if __name__ == "__main__":
   print(f"serving to http://localhost:{PORT}")
   print("READY!")
   # Start the server.
-  serve(app, host="0.0.0.0", port=PORT)
+  serve(app, host="0.0.0.0", port=PORT, threads=10)

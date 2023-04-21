@@ -1,109 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="myStyle.css">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Drawing Test</title>
+  <link rel="stylesheet" href="/css/myStyle.css">
+  <title>AI Completion</title>
 </head>
 <body>
-  <div class="text">
-    <p style="display:inline">Length</p>
-  </div>
-
-  <script src="p5.js"></script>
-  <script>
-
-    let bgColor;
-
-    // mode 0 = drawing
-    // mode 1 = erasing
-    // mode 2 = static
-    let mode = 2;
-    let slider;
-    let weight;
-    let colorPicker;
-
-    function setup() {
-      createCanvas(600, 600);
-      
-      colorPicker = createColorPicker('#ed225d');
-      colorPicker.position(10, 30);
-
-      colorMode(HSB);
-      
-      bgColor = 255;
-      background(200);
-      text('Hold the e key to erase', 20,20);
-
-      slider = createSlider(0, 75, 10, 5);
-      slider.position(10, 0);
-      slider.style('width', '80px');
-    }
-
-    function draw() {
-      weight = slider.value();      
-      noStroke();
-      
-      if(keyIsPressed && key == 'e'){
-        mode = 1;
-      } else if(keyIsPressed && key == 'd'){
-        mode = 0; 
-      }
-      else if(keyIsPressed && key == 's'){
-        mode = 2;
-      }
-      
-    }
-
-    function drawMarker(col, weight) {
-      strokeWeight(weight);
-      // stroke(col, 70, 100);
-      stroke(colorPicker.color());
-      line(mouseX, mouseY, pmouseX, pmouseY);
-    }
-
-    function mouseDragged(){
-      if(mode == 0){
-        strokeWeight(weight);
-        stroke(colorPicker.color());
-        line(mouseX, mouseY, pmouseX, pmouseY);
-      }
-      else if( mode == 1){
-        strokeWeight(weight);
-        stroke(200);
-        line(mouseX, mouseY, pmouseX, pmouseY);
-      }
-    }
-
-    function drawEraser(weight){
-      strokeWeight(weight);
-      stroke(200);
-      line(mouseX, mouseY, pmouseX, pmouseY);
-    }
-
-    function clearScreen() {
-      bgColor = color(random(360), random(100), random(100));
-      background(200);
-      text('Hold the e key to erase', 20,20);
-    }
-
-    function toggleDraw(){
-      mode = 0;
-    }
-
-    function toggleErase(){
-      mode = 1;
-    }
-    
-  </script>
-  <input type=button class="toggleDraw" onclick="toggleDraw()" value="Draw" /input>
-  <button onclick="toggleErase()">Erase</button>
-  <button onclick="clearScreen()">Clear Canvas</button>
-  <button>Trap the AI</button>
-  <button>Liberate the AI</button>
-  <button onclick="suggest">Suggest</button>
-  <p></p>
+  <p>This is the main page!</p>
+  <button type=button id="toggle-draw" onclick="toggleDraw()">Draw</button>
+  <button id="load-example" onclick="loadExample()">Load Example</button>
+  <button id="complete" onclick="complete()">Complete</button>
+  <button id="toggle-erase" onclick="toggleErase()">Erase</button>
+  <button id="clear-screen" onclick="clearScreen()">Clear Canvas</button>
+  <button id="constrain-ai" onclick="" disabled>Trap the AI</button>
+  <button id="free-ai" onclick="" disabled>Liberate the AI</button>
+  <label for="timelapse" onclick="toggleTimelapse()">Timelapse<input type="checkbox" id="timelapse"></label>
+  
+  <script src="js/p5.js"></script>
+  <script src="/js/completion.js"></script>
+  <script src="/js/Tracer.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/handlers.js"></script>
 </body>
 </html>

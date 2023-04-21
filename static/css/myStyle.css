@@ -5,7 +5,7 @@ body {
     vertical-align: middle;
 }
 
-.toggleDraw{
+#toggle-draw {
     background: #ce0000;
     border: 1px solid #000000;
     color: white;

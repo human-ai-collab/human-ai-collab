@@ -1,6 +1,4 @@
-
-
-export default class Tracer {
+class Tracer {
   // Define static variables
   static hasRunSetup = false;
 
@@ -14,7 +12,7 @@ export default class Tracer {
    * @param {Canvas} _drawingCanvas the canvas that the tracer will draw on.
    * @param {Number} speed Number of drawing steps taken each frame.
    */
-  constructor(_drawingCanvas, speed = 10) {
+  constructor(_drawingCanvas, speed = 1) {
     this.paused = true;
     this.stepsPerFrame = speed;
     if (!Tracer.hasRunSetup) {
@@ -55,7 +53,8 @@ export default class Tracer {
     pixelDensity(1)
     // Initialize Canvases
     Tracer.drawingCanvas = _drawingCanvas;
-    Tracer.imageSize = Tracer.drawingCanvas.width;
+    Tracer.imageWidth = Tracer.drawingCanvas.width;
+    Tracer.imageHeight = Tracer.drawingCanvas.height;
     const parentEl = document.querySelector("main");
     
     Tracer.drawingCTX = Tracer.drawingCanvas.getContext('2d', { willReadFrequently: true });
@@ -64,12 +63,13 @@ export default class Tracer {
     // Complete Canvas
     Tracer.completeCanvas = document.createElement("canvas");
     parentEl.appendChild(Tracer.completeCanvas);
-    Tracer.completeCanvas.width = Tracer.imageSize;
-    Tracer.completeCanvas.height = Tracer.imageSize;
+    this.completeCanvas.style.display="none";
+    Tracer.completeCanvas.width = Tracer.imageWidth;
+    Tracer.completeCanvas.height = Tracer.imageHeight;
     Tracer.completeCTX = Tracer.completeCanvas.getContext('2d', { willReadFrequently: true });
     Tracer.completeCTX.willReadFrequently = true;
     Tracer.completeCTX.fillStyle = "#FFF";
-    Tracer.completeCTX.fillRect(0, 0, Tracer.imageSize, Tracer.imageSize);
+    Tracer.completeCTX.fillRect(0, 0, Tracer.imageWidth, Tracer.imageHeight);
   }
   draw() {
     if (!this.paused) {
@@ -189,8 +189,8 @@ export default class Tracer {
    * Resets the AI brush to a random position on the screen, pointing it in a random direction.
    */
   resetPos() {
-    this.pos.x = Math.floor(Math.random() * Tracer.imageSize);
-    this.pos.y = Math.floor(Math.random() * Tracer.imageSize);
+    this.pos.x = Math.floor(Math.random() * Tracer.imageWidth);
+    this.pos.y = Math.floor(Math.random() * Tracer.imageHeight);
     this.startingRot = null;
   }
   
@@ -216,6 +216,6 @@ export default class Tracer {
   }
   
   static inBounds(pos) {
-    return pos.x >= 0 && pos.y >= 0 && pos.x < Tracer.imageSize && pos.y < Tracer.imageSize;
+    return pos.x >= 0 && pos.y >= 0 && pos.x < Tracer.imageWidth && pos.y < Tracer.imageHeight;
   }
 }

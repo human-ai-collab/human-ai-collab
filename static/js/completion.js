@@ -1,6 +1,5 @@
-import Tracer from '/js/Tracer.js';
-
-export default function complete(drawingCanvas, completeCanvas) {
+// Get the next iteration of the image from the server. Returns a promise.
+function getCompletion(drawingCanvas, completeCanvas) {
   return (
     sendImage(drawingCanvas)
     .then(resp => resp.json())
@@ -8,6 +7,7 @@ export default function complete(drawingCanvas, completeCanvas) {
   );
 }
 
+// Load image from a dataURI onto the specified canvas.
 function loadDataURL(dataURL, canvas) {
   const myPromise = new Promise((resolve, reject) => {
     let context = canvas.getContext('2d');
@@ -22,6 +22,7 @@ function loadDataURL(dataURL, canvas) {
   });
 }
 
+// Send encoded image to server using a fetch request
 function sendImage(drawingCanvas) {
   return fetch("/api/complete", {
     method: "POST",
@@ -34,6 +35,7 @@ function sendImage(drawingCanvas) {
   });
 }
 
+// Convert canvas pixels to a dataURI
 function canvasToBase64(canvas) {
   let imageData = canvas.toDataURL('image/png'); // produces a base64 image string
   return imageData;
