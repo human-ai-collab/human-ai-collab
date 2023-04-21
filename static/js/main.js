@@ -25,7 +25,7 @@ setup = function setup() {
 // this is the "module" verson of the p5 draw function. Works the same way as draw(){}
 function draw() {
   // adjust brush weight
-  weight = slider.value()/50
+  weight = slider.value()/10
   // Move the tracer a little bit.
   tracer.draw();
 
