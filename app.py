@@ -15,6 +15,7 @@ from waitress import serve
 import sys
 from util import pillow_to_dataURI, dataURI_to_pillow
 import ai
+import webbrowser
 
 # Choose your port here
 PORT = 8000
@@ -26,6 +27,9 @@ ai.init(enable_ai, placeholder_image_path="static/images/cat-better.png")
 
 # Initialize a new python flask server.
 app = Flask(__name__)
+
+def open_webbrowser():
+  webbrowser.open_new("http://localhost:8000/welcome.html")
 
 # Serve the static site
 @app.route("/")
@@ -59,4 +63,5 @@ if __name__ == "__main__":
   print(f"serving to http://localhost:{PORT}")
   print("READY!")
   # Start the server.
+  open_webbrowser()
   serve(app, host="0.0.0.0", port=PORT, threads=10)
