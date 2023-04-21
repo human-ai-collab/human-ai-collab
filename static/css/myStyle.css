@@ -4,9 +4,17 @@ body {
     text-align: center;
     vertical-align: middle;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+    
 }
+  .timelapse{
+    border:solid;
+    padding: 1px;
+  }
 
   .shortcuts{
+    border:solid;
+    padding: 1px;
     position: relative;
     display: inline-block;
     cursor: pointer;
