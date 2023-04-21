@@ -2,6 +2,7 @@
 let tracer, drawingCanvas;
 let mode = 2;
 let weight = 10;
+let slider;
 // Sets the size of the canvas.
 const IMAGE_WIDTH = 1280;
 const IMAGE_HEIGHT = 720;
@@ -16,10 +17,15 @@ setup = function setup() {
   drawingCanvas = p5Renderer.canvas;
   tracer = new Tracer(drawingCanvas, 20);
   background(235)
+  slider = createSlider(0, 255, 100);
+  slider.position(10, 10);
+  slider.style('width', '80px');
 }
 
 // this is the "module" verson of the p5 draw function. Works the same way as draw(){}
 function draw() {
+  // adjust brush weight
+  weight = slider.value()/50
   // Move the tracer a little bit.
   tracer.draw();
 
