@@ -21,6 +21,11 @@ function complete() {
   });
 }
 
+function StopAI(){
+  tracer.stopTracing()
+  clearTimeout(timer)
+}
+
 function mouseDragged() {
   if(mode == 0){
     strokeWeight(weight);
@@ -29,7 +34,7 @@ function mouseDragged() {
   }
   else if( mode == 1){
     strokeWeight(weight);
-    stroke(200);
+    stroke(235);
     line(mouseX, mouseY, pmouseX, pmouseY);
   }
 };
