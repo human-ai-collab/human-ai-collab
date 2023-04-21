@@ -8,16 +8,22 @@ function loadExample() {
   placeholder.src = 'images/cat-unfinished.png';
 }
 
+let timer = null
 // Get an image completion from the backend. Taces for a minute, then rinse and repeat.
 function complete() {
   getCompletion(drawingCanvas, Tracer.completeCanvas).then(() => {
     tracer.startTracing()
     // Trace for a minute, then get another completion.
-    setTimeout(() => {
+    timer = setTimeout(() => {
       tracer.stopTracing();
       complete();
     }, 30 * 1000);
   });
+}
+
+function StopAI(){
+  tracer.stopTracing()
+  timer.clearTimeout()
 }
 
 function mouseDragged() {
