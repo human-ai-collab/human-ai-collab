@@ -23,7 +23,7 @@ function complete() {
 
 function StopAI(){
   tracer.stopTracing()
-  timer.clearTimeout()
+  clearTimeout(timer)
 }
 
 function mouseDragged() {
@@ -34,7 +34,7 @@ function mouseDragged() {
   }
   else if( mode == 1){
     strokeWeight(weight);
-    stroke(200);
+    stroke(235);
     line(mouseX, mouseY, pmouseX, pmouseY);
   }
 };
