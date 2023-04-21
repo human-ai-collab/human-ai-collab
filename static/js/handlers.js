@@ -55,5 +55,5 @@ function toggleErase() {
 
 const timelapseCheckbox = document.getElementById("timelapse");
 function toggleTimelapse() {
-  tracer.setSpeed(timelapseCheckbox.checked ? 20 : 1);
+  tracer.setSpeed(timelapseCheckbox.checked ? 2000 : 1);
 }
