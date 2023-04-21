@@ -37,4 +37,8 @@ function draw() {
   else if(keyIsPressed && key == 's'){
     mode = 2;
   }
+
+  if(keyIsPressed && key == 'c'){
+    clearScreen()
+  }
 }
