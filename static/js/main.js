@@ -41,4 +41,10 @@ function draw() {
   if(keyIsPressed && key == 'c'){
     clearScreen()
   }
+  if(keyIsPressed && key == 'p'){
+    StopAI()
+  }
+  if(keyIsPressed && key == 'Enter'){
+    complete()
+  }
 }

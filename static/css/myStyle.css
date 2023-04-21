@@ -6,6 +6,38 @@ body {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+  .shortcuts{
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  .shortcuts .pop-up {
+    visibility: hidden;
+    width: 300px;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    border-radius: 10px;
+    padding: 10px 10px 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; 
+    left: 50%;
+    margin-left: -80px;
+  }
+
+  /* uses a general sibling selector */
+  .shortcuts:hover .pop-up {
+    visibility: visible;
+    color: rgb(247, 243, 243);
+  }
+
+  .shortcuts:hover{
+    color: rgb(247, 243, 243);
+  }
+
+
 #toggle-draw {
     background: #ce0000;
     border: 1px solid #000000;
