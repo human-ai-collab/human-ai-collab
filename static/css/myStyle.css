@@ -9,6 +9,8 @@ body {
 }
   .timelapse{
     border:solid;
+    width: 20; 
+    height: 20;
     padding: 1px;
   }
 
