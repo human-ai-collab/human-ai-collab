@@ -9,10 +9,13 @@ Feel free to try different things with this and keep track of your findings.
 # to have.
 downscale_size = 1280
 
+# this prompt needs to be changed based on the dropdown via js or something
+myPrompt = "Realistic ink drawing, trending on ArtStation, full composition, photocopy"
+
 arguments = {
   # Change this to change the text prompt for how to edit the image.
   # "prompt": "Realistic graphite sketch by Rembrandt, museum, full composition, photocopy",
-  "prompt": "Realistic ink drawing, trending on ArtStation, full composition, photocopy",
+  "prompt": myPrompt,
   # "prompt": "Realistic graphic sketch, trending on ArtStation, full composition, photocopy",
   # How strongly the image is affected.
   # Default: 0.75
