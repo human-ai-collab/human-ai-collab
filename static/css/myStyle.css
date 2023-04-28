@@ -8,15 +8,16 @@ body {
     
 }
   .timelapse{
+    background-color: white;
     border:solid;
     width: 20; 
     height: 20;
-    padding: 1px;
+    padding: 7px 3px 1px 3px;
   }
 
   .shortcuts{
     border:solid;
-    padding: 1px;
+    padding: 7px 3px 1px 3px;
     position: relative;
     display: inline-block;
     cursor: pointer;
@@ -51,7 +52,7 @@ body {
 .dropbtn {
   background-color: #31b0da;
   color: white;
-  padding: 3px;
+  padding: 8px 3px 1px 3px;
   font-size: 16px;
   border: none;
 }
