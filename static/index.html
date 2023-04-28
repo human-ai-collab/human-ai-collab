@@ -9,15 +9,19 @@
 </head>
 <body>
   <h1>p<b>AI</b>nt5</h1>
-  <button type=button id="toggle-draw" onclick="toggleDraw()" ><img src="draw.png" alt="buttonpng" border="0" width="20" 
+  <button type=button id="toggle-draw" onclick="toggleDraw()" ><img src="draw.png" alt="buttonpng"  width="20" 
     height="20" /></button>
   <!-- <button id="load-example" onclick="loadExample()">Load Example</button> -->
-  <button id="complete" onclick="complete()">Complete</button>
-  <button id="toggle-erase" onclick="toggleErase()">Erase</button>
-  <button id="clear-screen" onclick="clearScreen()">Clear Canvas</button>
+  <button id="toggle-erase" onclick="toggleErase()"><img src="eraser.png" alt="buttonpng" width="20" 
+    height="20" /></button>
+  <button id="clear-screen" onclick="clearScreen()"><img src="clear.png" alt="buttonpng"  width="20" 
+    height="20" /></button>
   <button id="constrain-ai" onclick="" disabled>Trap the AI</button>
   <button id="free-ai" onclick="" disabled>Liberate the AI</button>
-  <button id="pause-ai" onclick="StopAI()">Pause AI</button>
+  <button id="complete" onclick="complete()"><img src="complete.png" alt="buttonpng" width="20" 
+    height="20" /></button></button>
+  <button id="pause-ai" onclick="StopAI()"><img src="pause.png" alt="buttonpng"  width="20" 
+    height="20" /></button>
   <label class="timelapse" for="timelapse" onclick="toggleTimelapse()">Timelapse<input type="checkbox" id="timelapse"></label>
   <div class="shortcuts">shortcuts
   <!-- <div class="hide"> -->

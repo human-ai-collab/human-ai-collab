@@ -46,12 +46,12 @@ body {
   }
 
 
-#toggle-draw {
-    /* background: #ffffff; */
-    border: 1px solid #000000;
-    color: white;
-    padding: 4px 10px;
-    font-weight: bold;
-    border-radius: 4px;
-    cursor: pointer;
-}
+/* #toggle-draw { */
+    background: #ffffff;
+    /* border: 1px solid #000000; */
+    /* color: white; */
+    /* padding: 4px 10px; */
+    /* font-weight: bold; */
+    /* border-radius: 4px; */
+    /* cursor: pointer; */
+/* } */
