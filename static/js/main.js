@@ -18,7 +18,7 @@ setup = function setup() {
   tracer = new Tracer(drawingCanvas, 2000);
   background(235)
   slider = createSlider(0, 255, 100);
-  slider.position(10, 10);
+  slider.position(1300, 90);
   slider.style('width', '80px');
 }
 
