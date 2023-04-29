@@ -17,16 +17,17 @@ function complete() {
     timer = setTimeout(() => {
       tracer.stopTracing();
       complete();
-    }, 30 * 1000);
+    }, 45 * 1000);
   });
 }
 
 function StopAI(){
-  tracer.stopTracing()
+  tracer.stopTracing();
   clearTimeout(timer)
 }
 
 function mouseDragged() {
+  tracer.stopTracing();
   if(mode == 0){
     strokeWeight(weight);
     stroke(0);

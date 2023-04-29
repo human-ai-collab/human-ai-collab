@@ -33,11 +33,14 @@ class Tracer {
   }
 
   startTracing() {
+    Tracer.completeCTX.drawImage(Tracer.drawingCanvas, 0, 0);
     this.paused = false;
   }
 
   stopTracing() {
     this.paused = true;
+    Tracer.completeCTX.drawImage(Tracer.drawingCanvas, 0, 0);
+    Tracer.completeCanvas.style.display = "inline-block"
   }
 
   setSpeed(speed) {
