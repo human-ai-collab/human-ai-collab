@@ -38,6 +38,7 @@ function mouseDragged() {
     stroke(235);
     line(mouseX, mouseY, pmouseX, pmouseY);
   }
+  tracer.forgetCompletion();
 };
 
 function clearScreen() {
