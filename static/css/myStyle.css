@@ -8,15 +8,18 @@ body {
     
 }
   .timelapse{
-    background-color: white;
+    background-color: #e2e2e2;
     border:solid;
+    border-width: thin;
     width: 20; 
     height: 20;
     padding: 7px 3px 1px 3px;
   }
 
   .shortcuts{
+    background-color: #e2e2e2;
     border:solid;
+    border-width: thin;
     padding: 7px 3px 1px 3px;
     position: relative;
     display: inline-block;

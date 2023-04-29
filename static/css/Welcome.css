@@ -8,16 +8,16 @@ body {
     /* border: 5px solid rgb(176, 179, 230); */
 }
 
-image {
+.card {
     width: 100%;
     height: auto;
 }
   
-.shrink image {
+.shrink card {
     transition: 1s ease;
 }
     
-.shrink image:hover{
+.shrink card:hover{
     -webkit-transform: scale(0.8);
     -ms-transform: scale(0.8);
     transform: scale(0.8);
