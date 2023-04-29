@@ -7,6 +7,8 @@ class Tracer {
   static drawingCTX; // The rendering context for drawingCanvas.
   static completeCTX; // The rendering context for completeCanvas.
   static imageSize;
+  static drawingData;
+  static completeData;
 
   /**
    * @param {Canvas} _drawingCanvas the canvas that the tracer will draw on.
@@ -87,6 +89,8 @@ class Tracer {
         }
       }
     }
+    Tracer.drawingData = Tracer.drawingCTX.getImageData(0, 0, Tracer.drawingCanvas.width, Tracer.drawingCanvas.height);
+    Tracer.completeData = Tracer.completeCTX.getImageData(0, 0, Tracer.completeCanvas.width, Tracer.completeCanvas.height);
   }
   
   /**
@@ -97,7 +101,7 @@ class Tracer {
       this.resetPos();
       this.smoothStrokeWeight = 2;
       if (Math.abs(Tracer.differenceAt(this.pos)) > 50) {
-        const preciseValue = Tracer.valueAt(this.pos, Tracer.completeCTX);
+        const preciseValue = Tracer.valueAt(this.pos, Tracer.completeData);
         const noise = 4 * (Math.random() - 0.5);
         this.strokeValue = Math.min(Math.max(0, preciseValue + noise), 255);
         return;
@@ -141,7 +145,7 @@ class Tracer {
       this.newPos.add(this.pos);
   
       // Measure how well the stroke color matches this spot.
-      const errorWith = Math.abs(Tracer.valueAt(this.newPos, Tracer.completeCTX) - this.strokeValue);
+      const errorWith = Math.abs(Tracer.valueAt(this.newPos, Tracer.completeData) - this.strokeValue);
       const errorWithout = Math.abs(Tracer.differenceAt(this.newPos));
       const turnAmount = Math.abs(newAngle - this.startingRot); // Break ties by prefering the smallest turn.
   
@@ -196,6 +200,11 @@ class Tracer {
     this.pos.y = Math.floor(Math.random() * Tracer.imageHeight);
     this.startingRot = null;
   }
+
+  static getRedIndexForCoord = (x, y, width) => {
+    const red = Math.floor(y) * (width * 4) + Math.floor(x) * 4;
+    return red;
+  };
   
   /**
    * Calculate the the value of a canvas context at a certain position.
@@ -203,8 +212,9 @@ class Tracer {
    * @param {Canvas Context} ctx - The context of the canvas to search.
    * @return {number} The difference
    */
-  static valueAt(pos, ctx) {
-    const value = ctx.getImageData(Math.floor(pos.x), Math.floor(pos.y), 1, 1).data[0];
+  static valueAt(pos, imageData) {
+    const redIndex = Tracer.getRedIndexForCoord(pos.x, pos.y, imageData.width);
+    const value = (imageData.data[redIndex] + imageData.data[redIndex+1] + imageData.data[redIndex+2]) / 3;
     const noise = Math.random();
     return value + noise;
   }
@@ -215,7 +225,7 @@ class Tracer {
    * @return {number} The difference
    */
   static differenceAt(pos) {
-    return Tracer.valueAt(pos, Tracer.completeCTX) - Tracer.valueAt(pos, Tracer.drawingCTX);
+    return Tracer.valueAt(pos, Tracer.completeData) - Tracer.valueAt(pos, Tracer.drawingData);
   }
   
   static inBounds(pos) {
