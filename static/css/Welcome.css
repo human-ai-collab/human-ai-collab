@@ -8,10 +8,13 @@ body {
     /* border: 5px solid rgb(176, 179, 230); */
 }
 
+h1{
+    font-size: 60px;
+}
 #card {
-    padding-top: 20px;
-    width: 344px;
-    height: 344px;
+    background-color: black;
+    width: 400px;
+    height: 400px;
     margin: auto;
     overflow: hidden;
 }
@@ -29,12 +32,12 @@ body {
     }
     50%{
         scale:1.08;
-        opacity: 0.9;
+        opacity: 0.95;
     }
 }
 
 #card:hover > img{
-    animation: pulse 800ms ease-in-out;
+    animation: pulse 1000ms ease-in-out;
 }
     
 /* .shrink card:hover{
