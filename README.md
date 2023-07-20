@@ -4,7 +4,7 @@
 
 Your AI Drawing Buddy.
 
-![Video demostratino, no audio.](docs/welcome.png)
+![Video demostratino, no audio.](docs/demo.gif)
 
 ## Running the Server
 
